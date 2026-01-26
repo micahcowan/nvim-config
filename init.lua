@@ -35,8 +35,8 @@ vim.o.tabclose = 'uselast'
 vim.api.nvim_set_hl(0, "Normal", { bg = "#000016" })
 
 vim.keymap.set('n', '<C-W><C-]>', ':tab split<CR><C-]>')
-vim.keymap.set('n', '<C-W>t', ':tab split<CR>')
-vim.keymap.set('n', '<C-W>h', ':tab help ')
+vim.keymap.set('n', '<C-W><C-T>', ':tab split<CR>')
+vim.keymap.set('n', '<C-W><C-H>', ':tab help ')
 
 -- In 'help' buffer, Tab seeks to next tag
 vim.api.nvim_create_autocmd('BufAdd', {
