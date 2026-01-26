@@ -20,9 +20,9 @@ local packages = {
 -- }
 
 local function make_install_handler(name)
-    return function()
+    return function(ok)
         if ok then
-            vim.lsp.enable(name)
+            vim.defer_fn(function() vim.lsp.enable(name) end, 50)
         end
     end
 end
