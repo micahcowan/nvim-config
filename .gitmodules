@@ -1,0 +1,4 @@
+[submodule "repos/nvim-lspconfig"]
+	path = repos/nvim-lspconfig
+	url = https://github.com/micahcowan/nvim-lspconfig.git
+	branch = micah-changes
