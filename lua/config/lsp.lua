@@ -37,6 +37,10 @@ local function mason_refresh_cb()
         else
             installing = true
             pkg:install({}, make_install_handler(name))
+        end
+
+        if installing then
+            vim.cmd({cmd = 'fclose', bang = true})
             vim.cmd.Mason() -- show installation in progress
         end
     end
