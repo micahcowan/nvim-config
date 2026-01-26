@@ -39,6 +39,12 @@ vim.keymap.set('n', '<C-W><C-T>', ':tab split<CR>')
 vim.keymap.set('n', '<C-W><C-H>', ':tab help ')
 vim.keymap.set('n', '<C-W><C-Q>', ':tabclose<CR>')
 
+-- Open config
+vim.keymap.set('n', 'gC',
+    [[:tab split ~/.config/nvim/init.lua
+      :tcd ~/.config/nvim
+    ]])
+
 -- In 'help' buffer, Tab seeks to next tag
 vim.api.nvim_create_autocmd('BufAdd', {
     callback = function(opts)
