@@ -46,12 +46,15 @@ vim.keymap.set('n', '<C-A><Tab>', '', {
     desc = other_wnd_desc,
 })
 
-local create_new = function()
-    vim.cmd(':tab new')
+local split_new = function()
     vim.cmd(':vertical split')
     vim.cmd.wincmd('w')
     vim.cmd.terminal()
     vim.cmd.startinsert()
+end
+local create_new = function()
+    vim.cmd(':tab new')
+    split_new()
 end
 local create_new_desc
     = [[Create a new tab with an empty buffer at left, terminal at right]]
@@ -63,6 +66,14 @@ vim.keymap.set('n', '<C-A>c', '', {
     callback = create_new,
     desc = create_new_desc,
 })
+
+local split_new_desc
+    = [[Split (vertical) and place a new terminal session at the right]]
+vim.keymap.set('n', '<C-A>S', '', {
+    callback = split_new,
+    desc = split_new_desc,
+})
+
 
 vim.api.nvim_create_augroup('mjc-tmux-auto', {})
 -- Upon entering a terminal buffer, automatically enter terminal-insert
