@@ -71,7 +71,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
         if vim.o.buftype == 'terminal'
            and vim.api.nvim_get_mode().mode == 'n'
            or  vim.api.nvim_get_mode().mode == 'nt' then
-            -- vim.api.nvim_feedkeys('i', 'm', false) -- Terminal-insert
+
             vim.cmd.startinsert()
         end
     end,
