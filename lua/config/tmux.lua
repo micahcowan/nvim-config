@@ -6,6 +6,8 @@ vim.keymap.set('t', '<C-A>', '<C-\\><C-N>', { noremap = true })
 vim.keymap.set('t', '<C-A>[', '<C-\\><C-N>', { noremap = true })
 vim.keymap.set('t', '<C-A>m', '<C-\\><C-N>:tab Man ',
     { noremap = true })
+vim.keymap.set('n', '<C-A>m', '<C-\\><C-N>:tab Man ',
+    { noremap = true })
 vim.keymap.set('t', '<C-kPageDown>', '<C-\\><C-N><C-kPageDown>',
     { noremap = true })
 vim.keymap.set('t', '<C-kPageUp>', '<C-\\><C-N><C-kPageUp>',
