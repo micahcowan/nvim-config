@@ -4,7 +4,8 @@ local packages = {
     'clangd',
     'basedpyright',
     'perlnavigator',
-    'stylua',
+--  'stylua',
+    'emmylua_ls',
 }
 
 -- vim.lsp.config['vtsls'] = {
