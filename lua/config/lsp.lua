@@ -5,7 +5,8 @@ local packages = {
     'basedpyright',
     'perlnavigator',
 --  'stylua',
-    'emmylua_ls',
+--  'emmylua_ls',
+    'lua-language-server',
 }
 
 -- vim.lsp.config['vtsls'] = {

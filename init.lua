@@ -60,7 +60,7 @@ vim.api.nvim_create_autocmd('BufAdd', {
 })
 
 vim.api.nvim_create_autocmd({'BufWinEnter', 'BufEnter'}, {
-    callback = function(opts)
+    callback = function()
         if vim.o.buftype == 'help' then
             -- vim.api.nvim_set_option_value('relativenumber', true,
             --     { buf = opts.buf, scope = 'local' })
