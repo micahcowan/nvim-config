@@ -77,6 +77,10 @@ vim.keymap.set('n', 'gC',
     [[:tab split ~/.config/nvim/init.lua
       :tcd ~/.config/nvim
     ]])
+-- Set local dir to buffer's dir
+vim.keymap.set('n', 'g<C-L>', ':lcd %:p:h<CR>')
+-- Set tab-local dir to buffer's dir
+vim.keymap.set('n', 'g<C-T>', ':tcd %:p:h<CR>')
 
 vim.api.nvim_create_augroup('mcowan-init', {})
 
