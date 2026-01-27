@@ -14,12 +14,12 @@
 --
 --      return {
 --          mason_packages = {
---              'vtsls',
+--              'vtsls',                    -- TypeScript
 --              'bash-language-server',
---              'clangd',
---              'basedpyright',
---              'perlnavigator',
---              'lua-language-server',
+--              'clangd',                   -- C, C++
+--              'basedpyright',             -- python
+--              'perlnavigator',            -- perl
+--              'lua-language-server',      -- lua (Neovim config)
 --          }
 --      }
 
