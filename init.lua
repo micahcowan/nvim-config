@@ -70,28 +70,26 @@ vim.keymap.set('n', 'gC',
       :tcd ~/.config/nvim
     ]])
 
--- In 'help' buffer, Tab seeks to next tag
-vim.api.nvim_create_autocmd('BufAdd', {
-    callback = function(opts)
-        if vim.o.buftype == 'help' then
-            vim.api.nvim_buf_set_keymap(
-                opts.buf, 'n', '<Tab>',
-                '/\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>', { noremap = true })
-            vim.api.nvim_buf_set_keymap(
-                opts.buf, 'n', '<S-Tab>',
-                '?\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>', { noremap = true })
-        end
-    end,
-})
+vim.api.nvim_create_augroup('mcowan-init', {})
 
 vim.api.nvim_create_autocmd({'BufWinEnter', 'BufEnter'}, {
-    callback = function()
+    callback = function(opts)
         if vim.o.buftype == 'help' then
             -- vim.api.nvim_set_option_value('relativenumber', true,
             --     { buf = opts.buf, scope = 'local' })
             vim.wo.relativenumber = true
+
+            vim.api.nvim_buf_set_keymap(
+                opts.buf, 'n', '<Tab>',
+                '/\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>',
+                { noremap = true })
+            vim.api.nvim_buf_set_keymap(
+                opts.buf, 'n', '<S-Tab>',
+                '?\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>',
+                { noremap = true })
         end
     end,
+    group = 'mcowan-init'
 })
 
 require("config.tmux")
