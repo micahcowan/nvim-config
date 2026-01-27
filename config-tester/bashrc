@@ -1,0 +1,4 @@
+set -o vi
+PATH=$PATH:$HOME/opt/nvim-linux-x86_64/bin
+
+nvim
