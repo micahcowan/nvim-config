@@ -22,6 +22,14 @@
 --              'lua-language-server',      -- lua (Neovim config)
 --          }
 --      }
+--
+-- -- Before enabling these, first be sure that the following packages
+-- -- are installed to your system:
+-- --
+-- --   git unzip wget curl npm python3 python3-venv
+-- --
+-- -- (npm: needed to install/run several LSPs)
+-- -- (python3, python3-venv: needed by brightpyright specifically)
 
 local HOME = vim.env.HOME
 local vimrc = HOME .. '/.vimrc'
