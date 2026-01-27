@@ -1,5 +1,5 @@
 --vim.o.guifont = "FiraCode Nerd Font Mono,Ubuntu Mono:h9"
-vim.o.guifont = "Ubuntu Mono:h10"
+vim.o.guifont = "Ubuntu Mono:h10,Monaco:h10"
 vim.g.neovide_remember_window_size = true
 
 ---- Following doesn't work, bc the default TUI does UIEnter.

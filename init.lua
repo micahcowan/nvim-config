@@ -72,6 +72,10 @@ vim.keymap.set('n', '<C-W><C-T>', ':tab split<CR>')
 vim.keymap.set('n', '<C-W><C-H>', ':tab help ')
 vim.keymap.set('n', '<C-W><C-Q>', ':tabclose<CR>')
 
+-- For MacBook Pro, which lacks some keys
+vim.keymap.set('n', '<D-Left>', ':tabprev<CR>')
+vim.keymap.set('n', '<D-Right>', ':tabnext<CR>')
+
 -- Open config
 vim.keymap.set('n', 'gC',
     [[:tab split ~/.config/nvim/init.lua
