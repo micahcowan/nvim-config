@@ -4,3 +4,4 @@
 /config-tester/bashrc
 /config-tester/config.deps
 /config-tester/docker-build.stamp
+/config-tester/test-run.stamp
