@@ -1,25 +1,3 @@
-local packages = {
-    'vtsls',
-    'bash-language-server',
-    'clangd',
-    'basedpyright',
-    'perlnavigator',
---  'stylua',
---  'emmylua_ls',
-    'lua-language-server',
-}
-
--- vim.lsp.config['vtsls'] = {
---     -- Command and arguments to start the server.
---     cmd = { 'vtsls', '--stdio' },
---     -- Filetypes to automatically attach to.
---     filetypes = { 'typescript' },
---     -- Sets the "workspace" to the directory where any of these files is found.
---     -- Files that share a root directory will reuse the LSP server connection.
---     -- Nested lists indicate equal priority, see |vim.lsp.Config|.
---     root_markers = { 'package.json', '.git' },
--- }
-
 local function make_install_handler(name)
     return function(ok)
         if ok then
@@ -28,7 +6,7 @@ local function make_install_handler(name)
     end
 end
 
-local function mason_refresh_cb()
+local function mason_refresh_cb(packages)
     local reg = require('mason-registry')
     local installing = false
     for _, name in ipairs(packages) do
@@ -47,9 +25,11 @@ local function mason_refresh_cb()
     end
 end
 
-local function mason_config()
+local function mason_config(packages)
     local reg = require('mason-registry')
-    reg.refresh(mason_refresh_cb)
+    reg.refresh(function() mason_refresh_cb(packages) end)
 end
 
-mason_config()
+return {
+    setup = mason_config
+}
