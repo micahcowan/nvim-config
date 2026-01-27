@@ -11,7 +11,7 @@ test check: test-run.stamp
 
 test-run.stamp retest recheck: docker-build.stamp Makefile
 	docker run -it $(IMAGE)
-	touch $@
+	touch test-run.stamp
 
 docker-build.stamp: nvim-linux-x86_64.tar.gz config \
                     Dockerfile bashrc Makefile
