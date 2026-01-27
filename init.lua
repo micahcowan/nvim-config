@@ -1,3 +1,28 @@
+-- -- This config file is set up to install and load various handlers and
+-- -- LSPs for a variety of languages. Using them requires installation of
+-- -- a number of tools and resources, which might not be available or
+-- -- which one might not wish to install immediately on a new system,
+-- -- while still wishing to take advantage of other aspects of this
+-- --     Neovim config.
+-- --
+-- -- In consideration of this, these plugins and LSPs are disabled by
+-- -- default, until explicitly enabled by local config.
+-- --
+-- -- To enable installation of these LSPs and supporting plugins, place
+-- -- the following contents into ~/.config/nvim/lua/config/local.lua (or
+-- -- select just the specific ones you care about)
+--
+--      return {
+--          mason_packages = {
+--              'vtsls',
+--              'bash-language-server',
+--              'clangd',
+--              'basedpyright',
+--              'perlnavigator',
+--              'lua-language-server',
+--          }
+--      }
+
 local HOME = vim.env.HOME
 local vimrc = HOME .. '/.vimrc'
 
@@ -71,5 +96,14 @@ vim.api.nvim_create_autocmd({'BufWinEnter', 'BufEnter'}, {
 
 require("config.tmux")
 require("config.ui")
-require("config.lazy")
-require("config.lsp") -- MUST come after config.lazy
+local opt = { mason_packages = {} }
+if vim.uv.fs_stat(vim.fn.stdpath('config') .. "/lua/config/local.lua")
+then
+    opt = require("config.local")
+end
+
+if opt.mason_packages and #opt.mason_packages > 0 then
+    require("config.lazy")
+    -- MUST come after config.lazy:
+    require("config.lsp").setup(opt.mason_packages or {})
+end
