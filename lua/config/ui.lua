@@ -11,3 +11,5 @@
 -----  end
 
 vim.g.neovide_remember_window_size = true
+
+vim.cmd.highlight('LineNr', 'guifg=#ccccaa')
