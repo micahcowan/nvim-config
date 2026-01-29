@@ -48,7 +48,11 @@ vim.keymap.set('n', '<A-Right>', ':tabnext<CR>')
 -- Open config
 vim.keymap.set('n', 'gC',
     [[:tab split ~/.config/nvim/init.lua
-      :tcd ~/.config/nvim
+      :lcd ~/.config/nvim
+      :vertical split
+      :wincmd b
+      :edit ~/.config/nvim/lua/config/
+      :tcd ~/.config/nvim/lua/config
     ]])
 -- Set local dir to buffer's dir
 vim.keymap.set('n', 'g<C-L>', ':lcd %:p:h<CR>')
