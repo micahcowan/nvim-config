@@ -77,6 +77,8 @@ vim.api.nvim_create_autocmd({'BufWinEnter', 'BufEnter'}, {
                 opts.buf, 'n', '<S-Tab>',
                 '?\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>',
                 { noremap = true })
+        elseif vim.o.filetype == 'netrw' then
+            vim.wo.relativenumber = true
         end
     end,
     group = 'mcowan-init'
