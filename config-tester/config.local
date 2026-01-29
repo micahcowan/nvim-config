@@ -1,0 +1,12 @@
+local opts = {}
+
+opts.mason_packages = {
+    'vtsls',                    -- TypeScript
+    'bash-language-server',
+    'clangd',                   -- C, C++
+    'basedpyright',             -- python
+    'perlnavigator',            -- perl
+    'lua-language-server',      -- lua (Neovim config)
+}
+
+return opts

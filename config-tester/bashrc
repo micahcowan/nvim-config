@@ -1,4 +1,6 @@
 set -o vi
 PATH=$PATH:$HOME/opt/nvim-linux-x86_64/bin
 
-exec nvim
+printf '\033[1m%s\033[m (Press Enter)\n' "@msg@"
+read r
+nvim
