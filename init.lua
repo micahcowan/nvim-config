@@ -30,6 +30,7 @@ else
 end
 
 vim.o.tabclose = 'uselast'
+vim.o.showtabline = 2   -- always show
 
 -- Set bg color to very, very dark blue
 vim.api.nvim_set_hl(0, "Normal", { bg = "#000016" })
