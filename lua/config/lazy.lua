@@ -33,6 +33,10 @@ require("lazy").setup({
         import = "plugins",
     },
     {
+        "nanozuki/tabby.nvim",
+        opts = {},
+    },
+    {
         "mason-org/mason.nvim",
         opts = {},
     },
