@@ -3,19 +3,27 @@
 
 .PHONY: test check clean setup retest recheck
 
-IMAGE=mcowan-neovim-config-tester
+IMG_FULL=mcowan-neovim-config-tester
+IMG_BARE=mcowan-neovim-config-bare-install
+
 CONFIG_DEPS=Makefile $(shell \
 	if test -e config.deps; then cat config.deps; else echo config; fi)
 
 test check: test-run.stamp
 
 test-run.stamp retest recheck: docker-build.stamp Makefile
-	docker run -it $(IMAGE)
+	docker run -it $(IMG_BARE)
+	docker run -it $(IMG_FULL)
 	touch test-run.stamp
 
 docker-build.stamp: nvim-linux-x86_64.tar.gz config \
                     Dockerfile bashrc Makefile
-	docker build -t $(IMAGE) .
+	docker build $(DOCKER_BUILD) --build-arg msg=full -t $(IMG_FULL) .
+	docker build $(DOCKER_BUILD) \
+		--build-arg msg=bare \
+		--build-arg packages= \
+		--build-arg local_file=blank \
+		-t $(IMG_BARE) .
 	touch $@
 
 nvim-linux-x86_64.tar.gz:
@@ -34,6 +42,7 @@ config: $(CONFIG_DEPS)
 				;; \
 		esac; \
 	done
+	rm -f config/lua/config/local.lua
 				
 
 clean:
