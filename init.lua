@@ -1,36 +1,3 @@
--- -- This config file is set up to install and load various handlers and
--- -- LSPs for a variety of languages. Using them requires installation of
--- -- a number of tools and resources, which might not be available or
--- -- which one might not wish to install immediately on a new system,
--- -- while still wishing to take advantage of other aspects of this
--- --     Neovim config.
--- --
--- -- In consideration of this, these plugins and LSPs are disabled by
--- -- default, until explicitly enabled by local config.
--- --
--- -- To enable installation of these LSPs and supporting plugins, place
--- -- the following contents into ~/.config/nvim/lua/config/local.lua (or
--- -- select just the specific ones you care about)
---
---      return {
---          mason_packages = {
---              'vtsls',                    -- TypeScript
---              'bash-language-server',
---              'clangd',                   -- C, C++
---              'basedpyright',             -- python
---              'perlnavigator',            -- perl
---              'lua-language-server',      -- lua (Neovim config)
---          }
---      }
---
--- -- Before enabling these, first be sure that the following packages
--- -- are installed to your system:
--- --
--- --   git unzip wget curl npm python3 python3-venv
--- --
--- -- (npm: needed to install/run several LSPs)
--- -- (python3, python3-venv: needed by brightpyright specifically)
-
 local HOME = vim.env.HOME
 local vimrc = HOME .. '/.vimrc'
 

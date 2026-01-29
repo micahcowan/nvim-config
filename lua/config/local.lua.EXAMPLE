@@ -1,0 +1,54 @@
+local opts = {}
+
+-- enabled Mason packages:
+
+-- -- The global config is set up to install and load various handlers and
+-- -- LSPs for a variety of languages. Using them requires installation of
+-- -- a number of tools and resources, which might not be available or
+-- -- which one might not wish to install immediately on a new system,
+-- -- while still wishing to take advantage of other aspects of this
+-- --     Neovim config.
+-- --
+-- -- In consideration of this, these plugins and LSPs are disabled by
+-- -- default, until explicitly enabled by config.local.
+-- --
+-- -- To enable installation of these LSPs and supporting plugins, place
+-- -- the following contents into ~/.config/nvim/lua/config/local.lua (or
+-- -- select just the specific ones you care about)
+--
+--      -- UNCOMMENT TO INSTALL:
+--
+--      opts.mason_packages = {
+--              'vtsls',                    -- TypeScript
+--              'bash-language-server',
+--              'clangd',                   -- C, C++
+--              'basedpyright',             -- python
+--              'perlnavigator',            -- perl
+--              'lua-language-server',      -- lua (Neovim config)
+--      }
+--
+-- -- Before enabling these, first be sure that the following packages
+-- -- are installed to your system:
+-- --
+-- --   git unzip wget curl npm python3 python3-venv
+-- --
+-- -- (npm: needed to install/run several LSPs)
+-- -- (python3, python3-venv: needed by brightpyright specifically)
+
+
+-- local options
+
+---- Uncomment to unconditionally use unsafe terminal color sequences:
+-- vim.o.termguicolors = true
+
+---- Use to dictate which font to use:
+-- vim.o.guifont = "Ubuntu Mono:h10"
+
+-- Sets default coloring for Tabby plugin
+vim.cmd.highlight('TabLine',     'guifg=#a3c2c9', 'guibg=#67678f')
+vim.cmd.highlight('TabLineFill', 'guifg=#a3c2c9', 'guibg=#67678f')
+vim.cmd.highlight('TabLineSel', 'gui=bold', 'guifg=#67678f',
+    'guibg=#b3c2c9')
+
+
+return opts
