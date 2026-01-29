@@ -75,6 +75,8 @@ vim.keymap.set('n', '<C-W><C-Q>', ':tabclose<CR>')
 -- For MacBook Pro, which lacks some keys
 vim.keymap.set('n', '<D-Left>', ':tabprev<CR>')
 vim.keymap.set('n', '<D-Right>', ':tabnext<CR>')
+vim.keymap.set('n', '<A-Left>', ':tabprev<CR>')
+vim.keymap.set('n', '<A-Right>', ':tabnext<CR>')
 
 -- Open config
 vim.keymap.set('n', 'gC',
