@@ -15,6 +15,8 @@ vim.keymap.set('t', '<C-kPageUp>', '<C-\\><C-N><C-kPageUp>',
 vim.keymap.set('n', '<C-a>|', '<C-w>v<C-w>w', { noremap = true })
 vim.keymap.set('n', '<C-A><C-A>', 'g<Tab>', { noremap = true })
 vim.keymap.set('t', '<C-A><C-A>', '<C-\\><C-N>g<Tab>', { noremap = true })
+vim.keymap.set('n', '<C-A>e', ':tab new\n:edit ', { noremap = true })
+vim.keymap.set('t', '<C-A>e', '<C-\\><C-N>:tab new\n:edit ', { noremap = true })
 
 -- Send raw C-a, if C-a a is typed
 vim.keymap.set('t', '<C-A>a', '', {
