@@ -32,20 +32,6 @@ require("lazy").setup({
     {
         import = "plugins",
     },
-    {
-        "nanozuki/tabby.nvim",
-        opts = {},
-    },
-    {
-        "mason-org/mason.nvim",
-        enabled = function()
-            local success, cfg = pcall(function() return require("config.local") end)
-            if not cfg then cfg = {} end
-
-            return cfg.mason_packages and #cfg.mason_packages > 0
-        end,
-        opts = {},
-    },
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
