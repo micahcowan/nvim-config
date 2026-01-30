@@ -52,8 +52,10 @@ vim.keymap.set('n', 'gC',
       :lcd ~/.config/nvim
       :vertical split
       :wincmd b
-      :edit ~/.config/nvim/lua/config/
       :tcd ~/.config/nvim/lua/config
+      :terminal
+      :normal 1G
+      :startinsert
     ]])
 -- Set local dir to buffer's dir
 vim.keymap.set('n', 'g<C-L>', ':lcd %:p:h<CR>')
