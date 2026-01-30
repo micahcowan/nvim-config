@@ -32,6 +32,9 @@ end
 vim.o.tabclose = 'uselast'
 vim.o.showtabline = 2   -- always show
 
+-- Tell netrw to display relative line numbers
+vim.g.netrw_bufsettings = "noma nomod nonu nobl nowrap ro rnu"
+
 -- Set bg color to very, very dark blue
 vim.api.nvim_set_hl(0, "Normal", { bg = "#000016" })
 
@@ -95,8 +98,6 @@ vim.api.nvim_create_autocmd({'BufWinEnter', 'BufEnter'}, {
                 opts.buf, 'n', '<S-Tab>',
                 '?\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>',
                 { noremap = true })
-        elseif vim.o.filetype == 'netrw' then
-            vim.wo.relativenumber = true
         end
     end,
     group = 'mcowan-init'
