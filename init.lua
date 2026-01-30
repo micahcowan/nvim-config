@@ -52,16 +52,27 @@ vim.keymap.set('n', 'g==', ':. lua<CR>', { noremap = true })
 vim.keymap.set('v', 'g==', ":lua<CR>",   { noremap = true })
 
 -- Open config
-vim.keymap.set('n', 'gC',
-    [[:tab split ~/.config/nvim/init.lua
-      :lcd ~/.config/nvim
-      :vertical split
-      :wincmd b
-      :tcd ~/.config/nvim/lua/config
-      :terminal
-      :normal 1G
-      :startinsert
-    ]])
+vim.keymap.set('n', 'gC', '', {
+    noremap = true,
+    callback = function()
+        vim.cmd([[
+              :tab new
+              :tcd ~/.config/nvim/lua/config
+              :edit ~/.config/nvim/init.lua
+              :vertical split
+              :wincmd b
+              :terminal
+              :normal 1G
+              :startinsert
+            ]])
+        local _, tabname = pcall(function()
+            return require'tabby.feature.tab_name' end)
+        if tabname ~= nil then
+            local tnr = vim.api.nvim_get_current_tabpage()
+            tabname.set(tnr, 'CONFIG')
+        end
+    end})
+
 -- Set local dir to buffer's dir
 vim.keymap.set('n', 'g<C-L>', ':lcd %:p:h<CR>')
 -- Set tab-local dir to buffer's dir
