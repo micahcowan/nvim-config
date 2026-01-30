@@ -13,7 +13,7 @@ vim.keymap.set('t', '<C-kPageDown>', '<C-\\><C-N><C-kPageDown>',
 vim.keymap.set('t', '<C-kPageUp>', '<C-\\><C-N><C-kPageUp>',
     { noremap = true })
 vim.keymap.set('n', '<C-a>|', '<C-w>v<C-w>w', { noremap = true })
-vim.keymap.set('n', '<C-a>a', 'g<Tab>', { noremap = true })
+vim.keymap.set('n', '<C-A><C-A>', 'g<Tab>', { noremap = true })
 
 -- Send raw C-a, if C-a a is typed
 vim.keymap.set('t', '<C-A>a', '', {
