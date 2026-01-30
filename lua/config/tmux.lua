@@ -13,6 +13,7 @@ vim.keymap.set('t', '<C-kPageDown>', '<C-\\><C-N><C-kPageDown>',
 vim.keymap.set('t', '<C-kPageUp>', '<C-\\><C-N><C-kPageUp>',
     { noremap = true })
 vim.keymap.set('n', '<C-a>|', '<C-w>v<C-w>w', { noremap = true })
+vim.keymap.set('n', '<C-a>a', 'g<Tab>', { noremap = true })
 
 -- Send raw C-a, if C-a a is typed
 vim.keymap.set('t', '<C-A>a', '', {
@@ -24,6 +25,14 @@ vim.keymap.set('t', '<C-A>a', '', {
     end,
     desc = [[Send a literal <C-A>]]
 })
+
+-- Bind <C-A>1, <C-A>2, etc, for quick tab-switching
+for i = 1,9 do
+    vim.keymap.set('n', '<C-A>' .. i, ':tabnext ' .. i .. '<CR>',
+        { noremap = true })
+end
+vim.keymap.set('n', '<C-A>0', ':tabnext 10<CR>',
+        { noremap = true })
 
 -- Do a C-W w to switch to another window (even if in terminal-insert
 -- mode), and if the new window holds a terminal buffer, enter input mode
