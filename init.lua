@@ -46,6 +46,11 @@ vim.keymap.set('n', '<D-Right>', ':tabnext<CR>')
 vim.keymap.set('n', '<A-Left>', ':tabprev<CR>')
 vim.keymap.set('n', '<A-Right>', ':tabnext<CR>')
 
+-- Execute line or selected block of lua code
+vim.keymap.set('n', 'g==', ':. lua<CR>', { noremap = true })
+-- following line will get '<.'> prepended automatically!
+vim.keymap.set('v', 'g==', ":lua<CR>",   { noremap = true })
+
 -- Open config
 vim.keymap.set('n', 'gC',
     [[:tab split ~/.config/nvim/init.lua
