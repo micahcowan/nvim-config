@@ -39,6 +39,27 @@ for _, m in ipairs({'n', 't'}) do
             { noremap = true })
 end
 
+-- Rename tab (via tabby.nvim!) with <C-A>A (shift-a)
+local rnm_tab_desc = [[Prompt to rename the current tab]]
+local function prompt_rename_tab()
+    local tabname = require('tabby.feature.tab_name')
+    vim.ui.input({ prompt = "Rename TAB: " }, function(name)
+        if name == nil then return end
+        local nr = vim.api.nvim_get_current_tabpage()
+        tabname.set(nr, name)
+    end)
+end
+vim.keymap.set('n', '<C-A>A', '', {
+    noremap = true,
+    callback = prompt_rename_tab,
+    desc = rnm_tab_desc,
+})
+vim.keymap.set('n', '<C-A>A', '', {
+    noremap = true,
+    callback = prompt_rename_tab,
+    desc = rnm_tab_desc,
+})
+
 -- Do a C-W w to switch to another window (even if in terminal-insert
 -- mode), and if the new window holds a terminal buffer, enter input mode
 local other_wnd = function()
