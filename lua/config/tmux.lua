@@ -4,19 +4,18 @@
 vim.keymap.set('t', '<C-A>', '<C-\\><C-N>', { noremap = true })
 vim.keymap.set('t', '<C-A>', '<C-\\><C-N>', { noremap = true })
 vim.keymap.set('t', '<C-A>[', '<C-\\><C-N>', { noremap = true })
-vim.keymap.set('t', '<C-A>m', '<C-\\><C-N>:tab Man ',
-    { noremap = true })
-vim.keymap.set('n', '<C-A>m', '<C-\\><C-N>:tab Man ',
+vim.keymap.set({'t','n'}, '<C-A>m', '<C-\\><C-N>:tab Man ',
     { noremap = true })
 vim.keymap.set('t', '<C-kPageDown>', '<C-\\><C-N><C-kPageDown>',
     { noremap = true })
 vim.keymap.set('t', '<C-kPageUp>', '<C-\\><C-N><C-kPageUp>',
     { noremap = true })
 vim.keymap.set('n', '<C-a>|', '<C-w>v<C-w>w', { noremap = true })
-vim.keymap.set('n', '<C-A><C-A>', 'g<Tab>', { noremap = true })
-vim.keymap.set('t', '<C-A><C-A>', '<C-\\><C-N>g<Tab>', { noremap = true })
-vim.keymap.set('n', '<C-A>e', ':tab new\n:edit ', { noremap = true })
-vim.keymap.set('t', '<C-A>e', '<C-\\><C-N>:tab new\n:edit ', { noremap = true })
+vim.keymap.set({'n','t'}, '<C-A><C-A>', '<C-\\><C-N>g<Tab>',
+    { noremap = true })
+vim.keymap.set({'n','t'}, '<C-A>e', '<C-\\><C-N>:tab new\n:edit ',
+    { noremap = true })
+vim.keymap.set('t', '<C-A>]', '<C-\\><C-O>p', { noremap = true })
 
 -- Send raw C-a, if C-a a is typed
 vim.keymap.set('t', '<C-A>a', '', {
@@ -40,7 +39,6 @@ for _, m in ipairs({'n', 't'}) do
 end
 
 -- Rename tab (via tabby.nvim!) with <C-A>A (shift-a)
-local rnm_tab_desc = [[Prompt to rename the current tab]]
 local function prompt_rename_tab()
     local tabname = require('tabby.feature.tab_name')
     vim.ui.input({ prompt = "Rename TAB: " }, function(name)
@@ -49,36 +47,18 @@ local function prompt_rename_tab()
         tabname.set(nr, name)
     end)
 end
-vim.keymap.set('n', '<C-A>A', '', {
+vim.keymap.set({'n','t'}, '<C-A>A', '', {
     noremap = true,
     callback = prompt_rename_tab,
-    desc = rnm_tab_desc,
-})
-vim.keymap.set('n', '<C-A>A', '', {
-    noremap = true,
-    callback = prompt_rename_tab,
-    desc = rnm_tab_desc,
+    desc = [[Prompt to rename the current tab]],
 })
 
--- Do a C-W w to switch to another window (even if in terminal-insert
--- mode), and if the new window holds a terminal buffer, enter input mode
-local other_wnd = function()
-    vim.cmd.wincmd('w') -- Move to other window
-    -- if vim.o.buftype == 'terminal' then
-    --     vim.api.nvim_feedkeys('i', 'm', false) -- Terminal-insert
-    -- end
-end
-local other_wnd_desc
-    = [[Equivalent to <C-W><C-W>, but works even while in terminal]]
-vim.keymap.set('t', '<C-A><Tab>', '', {
+vim.keymap.set({'n','t'}, '<C-A><Tab>', '', {
     noremap = true,
-    callback = other_wnd,
-    desc = other_wnd_desc,
-})
-vim.keymap.set('n', '<C-A><Tab>', '', {
-    noremap = true,
-    callback = other_wnd,
-    desc = other_wnd_desc,
+    callback = function()
+        vim.cmd.wincmd('w')
+    end,
+    desc = [[Equivalent to <C-W><C-W>, but works even while in terminal]],
 })
 
 local split_new = function()
@@ -89,15 +69,17 @@ local split_new = function()
 end
 local create_new = function()
     vim.cmd(':tab new')
+    vim.ui.input({ prompt = "New dir (ENTER to keep): " },
+        function(dir)
+            if dir ~= nil and dir ~= '' then
+                vim.cmd.tcd(dir)
+            end
+        end)
     split_new()
 end
 local create_new_desc
     = [[Create a new tab with an empty buffer at left, terminal at right]]
-vim.keymap.set('t', '<C-A>c', '', {
-    callback = create_new,
-    desc = create_new_desc,
-})
-vim.keymap.set('n', '<C-A>c', '', {
+vim.keymap.set({'n','t'}, '<C-A>c', '', {
     callback = create_new,
     desc = create_new_desc,
 })
@@ -108,7 +90,39 @@ vim.keymap.set('n', '<C-A>S', '', {
     callback = split_new,
     desc = split_new_desc,
 })
+vim.keymap.set('n', '<C-A>C', '', {
+    callback = split_new,
+    desc = split_new_desc,
+})
 
+vim.keymap.set('n', '<C-W>o', '', {
+    desc = [[Close all but current window, unless there's a terminal]],
+    callback = function()
+        local tnr = vim.api.nvim_get_current_tabpage()
+        local wins = vim.api.nvim_tabpage_list_wins(tnr)
+        local got_term = false
+        for _, wnr in ipairs(wins) do
+            local bnr = vim.api.nvim_win_get_buf(wnr)
+            local ty = vim.api.nvim_get_option_value(
+                'buftype',
+                { buf = bnr })
+            if ty == 'terminal' then
+                got_term = true
+                break
+            end
+        end
+
+        if got_term then
+            vim.notify(
+                "Not closing other windows: TERMINAL present!",
+                vim.log.levels.ERROR,
+                {}
+            )
+        else
+            vim.cmd.wincmd('o')
+        end
+    end,
+})
 
 vim.api.nvim_create_augroup('mjc-tmux-auto', {})
 -- Upon entering a terminal buffer, automatically enter terminal-insert
@@ -124,14 +138,29 @@ vim.api.nvim_create_autocmd('BufEnter', {
     group = 'mjc-tmux-auto',
 })
 
--- Terminals get a special, buffer-local binding for the 'q' key,
--- to just re-enter insert mode (to emulate leaving tmux history mode)
+-- Special (non-insert/T-mode) keybindings and settings for terminals
 vim.api.nvim_create_autocmd('TermOpen', {
     callback = function()
+        -- like 'q' from copy-mode
         vim.keymap.set('n', 'q', 'i', {
             buffer = true,
             noremap = true,
             nowait = true,
+        })
+        -- like Space from copy-mode
+        vim.keymap.set('n', ' ', 'v', {
+            buffer = true,
+            noremap = true,
+            nowait = true,
+        })
+        -- like Enter from copy-mode
+        vim.keymap.set('v', '<CR>', 'yi', {
+            buffer = true,
+            noremap = true,
+            nowait = true,
+        })
+        vim.api.nvim_set_option_value('winfixbuf', true, {
+            win = vim.api.nvim_get_current_win()
         })
     end,
     group = 'mjc-tmux-auto',

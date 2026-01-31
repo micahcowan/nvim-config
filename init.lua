@@ -44,10 +44,10 @@ vim.keymap.set('n', '<C-W><C-H>', ':tab help ')
 vim.keymap.set('n', '<C-W><C-Q>', ':tabclose<CR>')
 
 -- For MacBook Pro, which lacks some keys
-vim.keymap.set('n', '<D-Left>', ':tabprev<CR>')
-vim.keymap.set('n', '<D-Right>', ':tabnext<CR>')
-vim.keymap.set('n', '<A-Left>', ':tabprev<CR>')
-vim.keymap.set('n', '<A-Right>', ':tabnext<CR>')
+vim.keymap.set({'n','t'}, '<D-Left>', ':tabprev<CR>')
+vim.keymap.set({'n','t'}, '<D-Right>', ':tabnext<CR>')
+vim.keymap.set({'n','t'}, '<A-Left>', ':tabprev<CR>')
+vim.keymap.set({'n','t'}, '<A-Right>', ':tabnext<CR>')
 
 -- Execute line or selected block of lua code
 vim.keymap.set('n', 'g==', ':. lua<CR>', { noremap = true })
