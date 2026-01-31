@@ -83,24 +83,38 @@ vim.keymap.set('n', 'g<C-T>', ':tcd %:p:h<CR>')
 
 vim.api.nvim_create_augroup('mcowan-init', {})
 
-vim.api.nvim_create_autocmd({'BufWinEnter', 'BufEnter'}, {
+-- Bindings to jump forward/back by hyperlink
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'help',
     callback = function(opts)
-        if vim.o.buftype == 'help' then
-            -- vim.api.nvim_set_option_value('relativenumber', true,
-            --     { buf = opts.buf, scope = 'local' })
-            vim.wo.relativenumber = true
+        vim.wo.relativenumber = true
 
-            vim.api.nvim_buf_set_keymap(
-                opts.buf, 'n', '<Tab>',
-                '/\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>',
-                { noremap = true })
-            vim.api.nvim_buf_set_keymap(
-                opts.buf, 'n', '<S-Tab>',
-                '?\\([|\'`]\\)[^ ]*\\1<CR>:nohls<CR>',
-                { noremap = true })
-        end
+        vim.keymap.set('n', '<Tab>', '', {
+            callback = function()
+                vim.fn.search('\\([|\'`]\\)[^ ]*\\1')
+            end,
+            noremap = true,
+        })
+        vim.keymap.set('n', '<S-Tab>', '', {
+            callback = function()
+                vim.fn.search('\\([|\'`]\\)[^ ]*\\1', 'b')
+            end,
+            noremap = true,
+        })
     end,
     group = 'mcowan-init'
+})
+
+-- help/man keybindings to be more like "less" (the pager)
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = {'help', 'man'},
+    callback = function()
+        vim.keymap.set('n', '<Space>', '<C-F>', { noremap = true })
+        vim.keymap.set('n', 'b', '<C-B>', { noremap = true })
+        -- Man already has this, but help doesn't:
+        vim.keymap.set('n', 'q', ':q<CR>', { noremap = true })
+    end,
+    group = 'mcowan-init',
 })
 
 require("config.tmux")
