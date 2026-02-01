@@ -16,6 +16,8 @@ vim.keymap.set({'n','t'}, '<C-A><C-A>', '<C-\\><C-N>g<Tab>',
 vim.keymap.set({'n','t'}, '<C-A>e', '<C-\\><C-N>:tab new\n:edit ',
     { noremap = true })
 vim.keymap.set('t', '<C-A>]', '<C-\\><C-O>p', { noremap = true })
+vim.keymap.set({'n','t'}, '<C-A>c', '<C-\\><C-N>:tab new<CR>:edit .<CR>',
+    { noremap = true })
 
 -- Send raw C-a, if C-a a is typed
 vim.keymap.set('t', '<C-A>a', '', {
@@ -67,32 +69,30 @@ local split_new = function()
     vim.cmd.terminal()
     vim.cmd.startinsert()
 end
-local create_new = function()
-    vim.cmd(':tab new')
-    vim.ui.input({ prompt = "New dir (ENTER to keep): " },
-        function(dir)
-            if dir ~= nil and dir ~= '' then
-                vim.cmd.tcd(dir)
-            end
-        end)
-    split_new()
-end
-local create_new_desc
-    = [[Create a new tab with an empty buffer at left, terminal at right]]
-vim.keymap.set({'n','t'}, '<C-A>c', '', {
-    callback = create_new,
-    desc = create_new_desc,
+vim.keymap.set('n', '<C-A>s', '', {
+    callback = split_new,
+    desc =
+        "Split (vertical) and place a new terminal session at the right",
 })
-
-local split_new_desc
-    = [[Split (vertical) and place a new terminal session at the right]]
 vim.keymap.set('n', '<C-A>S', '', {
-    callback = split_new,
-    desc = split_new_desc,
+    callback = function()
+        vim.cmd.tcd('%:p:h')
+        split_new()
+    end,
+    desc =
+        "Like <C-A>s, but first set :tcd from current file's containing dir",
 })
-vim.keymap.set('n', '<C-A>C', '', {
-    callback = split_new,
-    desc = split_new_desc,
+vim.keymap.set({'n','t'}, '<C-A>C', '', {
+    callback = function()
+        local dir = vim.fn.expand("%:p:h")
+        -- :tab new | tcd %:p:h | terminal
+        --   except that %:p:h comes from current buffer, not empty one.
+        vim.cmd.new({ mods = { tab = vim.api.nvim_get_current_tabpage() } })
+        vim.cmd.tcd(dir)
+        vim.cmd.terminal()
+        vim.cmd.startinsert()
+    end,
+    desc = "Create a new terminal tab. :tcd from current file.",
 })
 
 vim.keymap.set('n', '<C-W>o', '', {
