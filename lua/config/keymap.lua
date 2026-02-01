@@ -1,8 +1,9 @@
 -- config.keymap: GENERAL KEYMAP CHANGES --
 
+local util = require 'mjc-util'
+
 vim.keymap.set('n', '<C-W><C-]>', ':tab split<CR><C-]>')
 vim.keymap.set('n', '<C-W><C-T>', ':tab split<CR>')
-vim.keymap.set('n', '<C-W><C-Q>', ':tabclose<CR>')
 
 -- For MacBook Pro, which lacks some keys
 vim.keymap.set({'n','t'}, '<D-Left>', ':tabprev<CR>')
@@ -14,6 +15,46 @@ vim.keymap.set({'n','t'}, '<A-Right>', ':tabnext<CR>')
 vim.keymap.set('n', 'g==', ':. lua<CR>', { noremap = true })
 -- following line will get '<.'> prepended automatically!
 vim.keymap.set('v', 'g==', ":lua<CR>",   { noremap = true })
+
+vim.keymap.set('n', '<C-W>o', '', {
+    desc = [[Close all but current window, unless there's a terminal]],
+    callback = function()
+        local terms = util.get_terms_in_curtab()
+
+        if terms ~= nil then
+            vim.notify(
+                "Not closing other windows: TERMINAL present!",
+                vim.log.levels.ERROR,
+                {}
+            )
+        else
+            vim.cmd.wincmd('o')
+        end
+    end,
+})
+
+vim.keymap.set('n', '<C-W><C-Q>', '', {
+    desc = [[:tabclose, but unload any terminal windows]],
+    callback = function()
+        local tnr = vim.api.nvim_get_current_tabpage()
+        local wins = vim.api.nvim_tabpage_list_wins(tnr)
+        local terms = util.filter_term_wins(wins)
+        for _, term in ipairs(terms) do
+            local termbuf = vim.api.nvim_win_get_buf(term)
+            local attached = vim.fn.win_findbuf(termbuf)
+            if #attached == 1 then
+                -- terminal not attached anywhere else.
+                -- We don't want hidden terminals left running
+                -- (unless we're explicit about it), so kill it
+                vim.cmd.bwipeout({ args = { termbuf }, bang = true })
+            end
+        end
+        if #wins ~= #terms then
+            vim.cmd.tabclose()
+        --  else: all windows removed, tabs already closed
+        end
+    end,
+})
 
 -- Open help in new tab
 vim.keymap.set('n', '<C-W><C-H>', ':tab help ')
