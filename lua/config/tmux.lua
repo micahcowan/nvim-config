@@ -157,10 +157,26 @@ vim.api.nvim_create_autocmd('TermOpen', {
         vim.keymap.set('v', '<CR>', 'yi', {
             buffer = true,
             noremap = true,
-            nowait = true,
         })
         vim.api.nvim_set_option_value('winfixbuf', true, {
             win = vim.api.nvim_get_current_win()
+        })
+    end,
+    group = 'mjc-tmux-auto',
+})
+
+-- netrw: Open file at left, terminal in cwd at right
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'netrw',
+    callback = function()
+        vim.keymap.set('n', '<C-T>', '', {
+            callback = function()
+                vim.cmd.normal('\r')
+                vim.cmd.tcd('%:p:h')
+                split_new()
+            end,
+            noremap = true,
+            buffer = 0,
         })
     end,
     group = 'mjc-tmux-auto',
