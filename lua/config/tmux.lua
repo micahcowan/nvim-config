@@ -165,15 +165,19 @@ vim.api.nvim_create_autocmd('TermOpen', {
     group = 'mjc-tmux-auto',
 })
 
--- netrw: Open file at left, terminal in cwd at right
+-- netrw: Open file at left, terminal in cwd at right - but stay left!
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'netrw',
     callback = function()
         vim.keymap.set('n', '<C-T>', '', {
             callback = function()
-                vim.cmd.normal('\r')
+                vim.cmd.normal('\r') -- open file to edit
                 vim.cmd.tcd('%:p:h')
-                split_new()
+
+                vim.cmd(':vertical split')
+                vim.cmd.wincmd('w')
+                vim.cmd.terminal()
+                vim.cmd.wincmd('w') -- return to left pane (file buf)
             end,
             noremap = true,
             buffer = 0,
