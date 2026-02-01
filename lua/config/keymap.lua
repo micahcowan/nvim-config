@@ -2,7 +2,6 @@
 
 vim.keymap.set('n', '<C-W><C-]>', ':tab split<CR><C-]>')
 vim.keymap.set('n', '<C-W><C-T>', ':tab split<CR>')
-vim.keymap.set('n', '<C-W><C-H>', ':tab help ')
 vim.keymap.set('n', '<C-W><C-Q>', ':tabclose<CR>')
 
 -- For MacBook Pro, which lacks some keys
@@ -16,9 +15,24 @@ vim.keymap.set('n', 'g==', ':. lua<CR>', { noremap = true })
 -- following line will get '<.'> prepended automatically!
 vim.keymap.set('v', 'g==', ":lua<CR>",   { noremap = true })
 
+-- Open help in new tab
+vim.keymap.set('n', '<C-W><C-H>', ':tab help ')
+vim.keymap.set('v', '<C-W><C-H>', '', {
+    callback = function()
+        local p1 = vim.fn.getpos('.')
+        local p2 = vim.fn.getpos('v')
+        local helpstr  = vim.fn.getregion(p1, p2)[1]
+        vim.cmd.help {
+            args = { helpstr },
+            mods = {
+                tab = vim.api.nvim_get_current_tabpage(),
+            },
+        }
+    end
+})
+
 -- Open config
 vim.keymap.set('n', 'gC', '', {
-    noremap = true,
     callback = function()
         vim.cmd([[
               :tab new
