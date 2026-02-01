@@ -5,7 +5,7 @@ vim.api.nvim_create_augroup('mcowan-init', {})
 -- Bindings to jump forward/back by hyperlink
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'help',
-    callback = function(opts)
+    callback = function()
         vim.wo.relativenumber = true
 
         vim.keymap.set('n', '<Tab>', '', {
@@ -22,6 +22,7 @@ vim.api.nvim_create_autocmd('FileType', {
             noremap = true,
             buffer = 0,
         })
+        vim.keymap.set('n', '<CR>', '<C-]>', { buffer = 0 })
     end,
     group = 'mcowan-init'
 })
