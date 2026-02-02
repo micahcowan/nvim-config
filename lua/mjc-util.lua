@@ -1,5 +1,14 @@
 local M = {}
 
+-- edits a file in the designated buffer,
+-- UNLESS it's already loaded there (in case of existing modifications).
+function M.maybe_edit(bufnr, path)
+    local name       = vim.api.nvim_buf_get_name(bufnr)
+    if name ~= path then
+        vim.cmd.edit(path)
+    end
+end
+
 function M.filter_term_wins(wins)
     local terms = {}
     for _, wnr in ipairs(wins) do
