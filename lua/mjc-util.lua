@@ -12,11 +12,7 @@ function M.filter_term_wins(wins)
         end
     end
 
-    if #terms == 0 then
-        return nil
-    else
-        return terms
-    end
+    return terms
 end
 
 function M.get_terms_in_tab(tab_nr)
