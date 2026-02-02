@@ -21,7 +21,7 @@ vim.keymap.set('n', '<C-W>o', '', {
     callback = function()
         local terms = util.get_terms_in_curtab()
 
-        if terms ~= nil then
+        if #terms ~= 0 then
             vim.notify(
                 "Not closing other windows: TERMINAL present!",
                 vim.log.levels.ERROR,
