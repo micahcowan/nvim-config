@@ -8,10 +8,13 @@ return {
             incremental_selection = {
                 enable = true,
                 keymaps = {
-                    init_selection = "gnn", -- set to `false` to disable one of the mappings
-                    node_incremental = "grn",
+                    -- set to `false` to disable one of the mappings
+                    init_selection = "gnn",
                     scope_incremental = "grc",
-                    node_decremental = "grm",
+
+                    -- "grn" conflicts with lsp "rename" binding:
+                    node_incremental = "gr]",
+                    node_decremental = "gr[",
                 },
             },
         })
