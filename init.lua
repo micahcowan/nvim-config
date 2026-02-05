@@ -40,10 +40,12 @@ vim.g.netrw_bufsettings = "noma nomod nonu nobl nowrap ro rnu"
 -- Set bg color to very, very dark blue
 vim.api.nvim_set_hl(0, "Normal", { bg = "#000016" })
 
-require'config.keymap'
-require'config.autocmd'
-require("config.tmux")
-require("config.ui")
+require"config.keymap"
+require"config.autocmd"
+require"config.tmux"
+require"config.ui"
+require"config.todo"
+
 local opt = { mason_packages = {} }
 if vim.uv.fs_stat(vim.fn.stdpath('config') .. "/lua/config/local.lua")
 then
