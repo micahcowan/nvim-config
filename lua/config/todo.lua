@@ -73,6 +73,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.api.nvim_set_option_value('softtabstop', 2, { buf = b })
         vim.api.nvim_set_option_value('shiftwidth',  2, { buf = b })
         vim.api.nvim_set_option_value('autoindent', true, { buf = b })
+        vim.api.nvim_set_option_value('syntax', 'mjc-todo', { buf = b })
         vim.api.nvim_set_option_value(
             'indentkeys',
             vim.g.mjc_todo_indentkeys,
