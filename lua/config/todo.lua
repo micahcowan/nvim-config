@@ -132,5 +132,24 @@ vim.api.nvim_create_autocmd('FileType', {
             end,
             buffer = b,
         })
+
+        -- For every "bullet" char: if it's the only character, add a space after
+        local bullets = vim.g.mjc_todo_bullets
+        for i = 1, #bullets do
+            local bullet = string.sub(bullets, i, i)
+            vim.keymap.set('i', bullet, '', {
+                callback = function()
+                    vim.api.nvim_feedkeys(bullet, 'n', false) -- send the key
+                    local line = util.get_current_line()
+                    if util.first_nonspace(line) == nil then
+                        -- line contains only indentation
+                        if bullet ~= '.' or #line ~= 0 then
+                            vim.api.nvim_feedkeys(' ', 'n', false) -- send space
+                        end
+                    end
+                end,
+                buffer = b,
+            })
+        end
     end,
 })
