@@ -133,6 +133,35 @@ vim.api.nvim_create_autocmd('FileType', {
             buffer = b,
         })
 
+        -- Move by (root) items: J/K
+        vim.keymap.set('n', 'J', '', {
+            callback = function()
+                vim.fn.search("^  [-./x|+]", 'W')
+            end,
+            buffer = b,
+        })
+        vim.keymap.set('n', 'K', '', {
+            callback = function()
+                vim.fn.search("^  [-./x|+]", 'bW')
+            end,
+            buffer = b,
+        })
+
+        -- Move by (any) items: Ctrl-J/K
+        --   (Ctrl-J is newline/probably <CR>. But that's fine.)
+        vim.keymap.set('n', '<C-J>', '', {
+            callback = function()
+                vim.fn.search("^  \\+[-./x|+]", 'W')
+            end,
+            buffer = b,
+        })
+        vim.keymap.set('n', '<C-K>', '', {
+            callback = function()
+                vim.fn.search("^  \\+[-./x|+]", 'bW')
+            end,
+            buffer = b,
+        })
+
         -- For every "bullet" char: if it's the only character, add a space after
         local bullets = vim.g.mjc_todo_bullets
         for i = 1, #bullets do
