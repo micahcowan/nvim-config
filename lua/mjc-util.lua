@@ -3,7 +3,10 @@ local M = {}
 -- edits a file in the designated buffer,
 -- UNLESS it's already loaded there (in case of existing modifications).
 function M.maybe_edit(bufnr, path)
-    local name       = vim.api.nvim_buf_get_name(bufnr)
+    local name = vim.api.nvim_buf_call(bufnr, function()
+        return vim.fn.expand("%:p")
+    end)
+
     if name ~= path then
         vim.cmd.edit(path)
     end
