@@ -26,6 +26,7 @@ end
 
 -- Set 'indentexpr' to v:lua.MjcTodoIndent()
 -- GLOBAL
+local ident_use_following = false -- set by (wrapped) "O" normal command
 function MjcTodoIndent()
     local lnum, line = util.get_current_lnum_line()
     local pnum, prev = util.get_prev_nonempty_lnum_line(0, lnum)
@@ -34,12 +35,18 @@ function MjcTodoIndent()
         return 0
     end
 
+    if ident_use_following then
+        -- when 'O' was pressed, use following line's indent instead
+        pnum = lnum+1
+        prev = util.get_line(0, pnum)
+    end
+
     local bullet = get_bullet(line)
     local prev_indent = util.get_indent(prev)
 
     -- -- If we're not empty and aren't just a bullet, keep existing indent
-    -- Is there an immediately-preceding, non-empty line?
-    if pnum == lnum - 1 then
+    -- Is there an immediately-adjacent, non-empty line?
+    if pnum == lnum - 1 or pnum == lnum + 1 then
         if get_bullet(prev) then
             if bullet then
                 return prev_indent
@@ -72,6 +79,7 @@ vim.api.nvim_create_augroup('mcowan-todo', {})
 -- Set up TODO buffers
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'mjc-todo',
+    group = 'mcowan-todo',
     callback = function(opts)
         local b = opts.buf
         vim.api.nvim_set_option_value('softtabstop', 2, { buf = b })
@@ -104,6 +112,25 @@ vim.api.nvim_create_autocmd('FileType', {
                 noremap = true,
                 buffer = b,
             })
+        vim.keymap.set('n', 'O', '', {
+            callback = function()
+                ident_use_following = true
+
+                -- set up to disable "use following" on exit from O:
+                vim.api.nvim_create_augroup('mcowan-exit-big-oh', {})
+                vim.api.nvim_create_autocmd('ModeChanged', {
+                    group = 'mcowan-exit-big-oh',
+                    pattern = 'i:n',
+                    callback = function()
+                        ident_use_following = false
+                        vim.api.nvim_create_augroup('mcowan-exit-big-oh', {})
+                    end,
+                })
+
+                -- Now feed an _unmapped_ O so we open the line, as expected
+                vim.api.nvim_feedkeys('O', 'n', false)
+            end,
+            buffer = b,
+        })
     end,
-    group = 'mcowan-todo',
 })
