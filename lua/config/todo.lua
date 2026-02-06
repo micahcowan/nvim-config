@@ -186,5 +186,20 @@ vim.api.nvim_create_autocmd('FileType', {
                 buffer = b,
             })
         end
+
+        vim.keymap.set('i', '<Space>', '', {
+            callback = function()
+                -- If we are already at a "bullet" with a single space after
+                -- it, we don't want to insert more spaces. (We assume that
+                -- any single character at line start with a space after it,
+                -- is a "bullet": user is unlikely to need two spaces after
+                -- an "a" or an "I" in running text, anyway.)
+                local line = util.get_current_line()
+                if vim.fn.match(line, "^\\s\\+\\S\\s$") == -1 then
+                    vim.api.nvim_feedkeys(' ', 'n', false) -- send space
+                end
+            end,
+            buffer = b,
+        })
     end,
 })
