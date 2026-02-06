@@ -96,22 +96,24 @@ vim.api.nvim_create_autocmd('FileType', {
             { buf = b })
 
         -- keybindings
-        vim.keymap.set(
-            'i',
-            "<C-\\>,",
-            "<Left><Left><C-O><Lt><Lt>",
-            {
-                noremap = true,
-                buffer = b,
-            })
-        vim.keymap.set(
-            'i',
-            "<C-\\>.",
-            "<C-O>>><Right><Right>",
-            {
-                noremap = true,
-                buffer = b,
-            })
+        -- NeoVim ALREADY HAS these, as C-T, C-D
+        -- -- indent/dedent
+        -- vim.keymap.set(
+        --     'i',
+        --     "<C-\\>,",
+        --     "<Left><Left><C-O><Lt><Lt>",
+        --     {
+        --         noremap = true,
+        --         buffer = b,
+        --     })
+        -- vim.keymap.set(
+        --     'i',
+        --     "<C-\\>.",
+        --     "<C-O>>><Right><Right>",
+        --     {
+        --         noremap = true,
+        --         buffer = b,
+        --     })
         vim.keymap.set('n', 'O', '', {
             callback = function()
                 ident_use_following = true
@@ -148,7 +150,7 @@ vim.api.nvim_create_autocmd('FileType', {
         })
 
         -- Move by (any) items: Ctrl-J/K
-        --   (Ctrl-J is newline/probably <CR>. But that's fine.)
+        --   (Ctrl-J is newline/probably translated to <CR>. But that's fine.)
         vim.keymap.set('n', '<C-J>', '', {
             callback = function()
                 vim.fn.search("^  \\+[-./x|+]", 'W')
@@ -161,6 +163,10 @@ vim.api.nvim_create_autocmd('FileType', {
             end,
             buffer = b,
         })
+
+        -- Insert today's date
+        vim.keymap.set('n', '<C-T>d', ":.-1 read !date +'\\%A, \\%Y-\\%m-\\%d:'<CR>",
+                       { noremap = true, buffer = b, })
 
         -- For every "bullet" char: if it's the only character, add a space after
         local bullets = vim.g.mjc_todo_bullets
