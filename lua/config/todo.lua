@@ -14,10 +14,14 @@ vim.g.mjc_todo_indentkeys = (function()
     return str
 end)()
 
-local function has_bullet(str)
+local function get_bullet(str)
     local first = util.first_nonspace(str)
     if first == nil then return false end
-    return string.find(vim.g.mjc_todo_bullets, first, 1, true) ~= nil
+    if string.find(vim.g.mjc_todo_bullets, first, 1, true) == nil then
+        return nil
+    else
+        return first
+    end
 end
 
 -- Set 'indentexpr' to v:lua.MjcTodoIndent()
@@ -30,13 +34,13 @@ function MjcTodoIndent()
         return 0
     end
 
-    local bullet = has_bullet(line)
+    local bullet = get_bullet(line)
     local prev_indent = util.get_indent(prev)
 
     -- -- If we're not empty and aren't just a bullet, keep existing indent
     -- Is there an immediately-preceding, non-empty line?
     if pnum == lnum - 1 then
-        if has_bullet(prev) then
+        if get_bullet(prev) then
             if bullet then
                 return prev_indent
             else
@@ -50,7 +54,7 @@ function MjcTodoIndent()
             end
         end
     -- (non-empty line doesn't immediately precede this one):
-    elseif not bullet then
+    elseif not bullet or bullet == '.' then
         return 0
     else
         return 2
