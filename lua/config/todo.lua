@@ -114,6 +114,10 @@ vim.api.nvim_create_autocmd('FileType', {
         --         noremap = true,
         --         buffer = b,
         --     })
+
+        -- The following sets up "O" (normal mode) to use indentation from
+        -- the line that immediately _follows_ it, rather than the one that
+        -- precedes it
         vim.keymap.set('n', 'O', '', {
             callback = function()
                 ident_use_following = true
