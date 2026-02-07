@@ -2,7 +2,7 @@
 
 local util = require "mjc-util"
 
----- TODO indentation function ----
+---- TODO indentation functions ----
 
 vim.g.mjc_todo_bullets = ".-/x|+"
 vim.g.mjc_todo_indentkeys = (function()
@@ -14,13 +14,71 @@ vim.g.mjc_todo_indentkeys = (function()
     return str
 end)()
 
-local function get_bullet(str)
-    local first = util.first_nonspace(str)
-    if first == nil then return false end
+local function get_bullet_loc(str)
+    local first, loc = util.first_nonspace(str)
+    if first == nil then return nil, nil end
     if string.find(vim.g.mjc_todo_bullets, first, 1, true) == nil then
-        return nil
+        return nil, loc
     else
-        return first
+        return first, loc
+    end
+end
+
+local function get_bullet(str)
+    return get_bullet_loc(str)
+end
+
+local function find_item_bullet()
+    local lnum, line = util.get_current_lnum_line()
+    local bullet, col = get_bullet_loc(line)
+    if bullet ~= nil then return { lnum = lnum, col = col, bullet = bullet } end
+
+    local indent = util.get_indent(line)
+    repeat
+        lnum = lnum - 1
+        line = util.get_line(0, lnum)
+        bullet, col = get_bullet_loc(line)
+        if bullet ~= nil and col == indent - 2 then
+            return { lnum = lnum, col = col, bullet = bullet }
+        end
+        local idt = util.get_indent(line)
+    until idt ~= indent
+    return nil
+end
+
+local function swap_bullet(...)
+    local a, b = ...
+    local args
+    if type(a) == "string" and type(b) == "string" then
+        return swap_bullet({a, b})
+    elseif type(a) == "string" and a == "--args--" then
+        args = b
+    else
+        args = {...}
+    end
+
+    -- Find bullet location for this item (may be on a preceding line)
+    local st = find_item_bullet()
+    if st == nil then return false end
+
+    -- Loop over mappings until we find one that matchs the bullet found.
+    for _, map in ipairs(args) do
+        local seek, replace = map[1], map[2]
+        if seek == st.bullet then
+            local pos = vim.fn.getpos(".")
+            vim.fn.cursor(st.lnum+1, st.col+1)
+            vim.print("lnum = " .. st.lnum+1 .. ", col = " .. st.col+1)
+            vim.fn.feedkeys('r' .. replace, 'x')
+            vim.fn.setpos(".", pos)
+        end
+    end
+    return false
+end
+
+local function mk_bullet_swapper(...)
+    local args = {...}
+    return function()
+        return swap_bullet("--args--", args)
     end
 end
 
@@ -136,6 +194,27 @@ vim.api.nvim_create_autocmd('FileType', {
                 -- Now feed an _unmapped_ O so we open the line, as expected
                 vim.api.nvim_feedkeys('O', 'n', false)
             end,
+            buffer = b,
+        })
+
+        -- Mark an item completed
+        vim.keymap.set('n', 'gx', '', {
+            callback = mk_bullet_swapper({'-', 'x'}, {'/', 'x'}, {'|', '+'}),
+            nowait = true,
+            buffer = b,
+        })
+
+        -- Mark an item uncompleted
+        vim.keymap.set('n', 'g-', '', {
+            callback = mk_bullet_swapper({'x', '-'}, {'/', '-'}, {'+', '|'}),
+            nowait = true,
+            buffer = b,
+        })
+
+        -- Mark an item in-progress
+        vim.keymap.set('n', 'g/', '', {
+            callback = mk_bullet_swapper({'x', '/'}, {'-', '/'}),
+            nowait = true,
             buffer = b,
         })
 
