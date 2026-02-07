@@ -46,7 +46,7 @@ function M.first_nonspace(str)
     else
         fidx = fidx + 1     -- zero-index -> one-index
     end
-    return string.sub(str, fidx, fidx)
+    return string.sub(str, fidx, fidx), fidx-1
 end
 
 -- doesn't work with tabs!
