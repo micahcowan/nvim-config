@@ -46,6 +46,9 @@ require"config.tmux"
 require"config.ui"
 require"config.todo"
 
+-- Akamai-specific config stuff
+require"config.akamai.todo"
+
 local opt = { mason_packages = {} }
 if vim.uv.fs_stat(vim.fn.stdpath('config') .. "/lua/config/local.lua")
 then
