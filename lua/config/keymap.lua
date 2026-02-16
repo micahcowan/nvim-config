@@ -87,7 +87,7 @@ vim.keymap.set('n', 'gC', '', {
             ]])
         local _, tabname = pcall(function()
             return require'tabby.feature.tab_name' end)
-        if tabname ~= nil then
+        if tabname ~= nil and tabname.set ~= nil then
             local tnr = vim.api.nvim_get_current_tabpage()
             tabname.set(tnr, 'CONFIG')
         end
