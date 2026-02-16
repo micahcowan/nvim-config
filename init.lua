@@ -52,6 +52,18 @@ then
     opt = require("config.local")
 end
 
+-- Load config.lazy only if at least one plugin is enabled
+do
+    local plugins = vim.fn.readdir(vim.fn.stdpath"config"
+        .. "/lua/lazy-enabled")
+    for _, file in ipairs(plugins) do
+        if string.match(file, "%.lua$") then
+            require"config.lazy"
+            break
+        end
+    end
+end
+
 if opt.mason_packages and #opt.mason_packages > 0 then
     require("config.lazy")
     -- MUST come after config.lazy:

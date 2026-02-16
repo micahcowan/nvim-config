@@ -1,5 +1,6 @@
 /lazy-lock.json
 /lua/config/local.lua
+/lua/lazy-enabled
 
 /config-tester/nvim-linux-x86_64.tar.gz
 /config-tester/config
