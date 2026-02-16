@@ -85,10 +85,15 @@ vim.keymap.set('n', '<C-A>S', '', {
 vim.keymap.set({'n','t'}, '<C-A>C', '', {
     callback = function()
         local dir = vim.fn.expand("%:p:h")
+        if vim.o.buftype == 'terminal' then
+            dir = nil
+        end
         -- :tab new | tcd %:p:h | terminal
         --   except that %:p:h comes from current buffer, not empty one.
         vim.cmd.new({ mods = { tab = vim.api.nvim_get_current_tabpage() } })
-        vim.cmd.tcd(dir)
+        if dir ~= nil then
+            vim.cmd.tcd(dir)
+        end
         vim.cmd.terminal()
         vim.cmd.startinsert()
     end,
