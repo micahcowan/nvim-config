@@ -42,6 +42,7 @@ vim.api.nvim_set_hl(0, "Normal", { bg = "#000016" })
 
 require"config.keymap"
 require"config.autocmd"
+require"config.cmd"
 require"config.tmux"
 require"config.ui"
 require"config.todo"
