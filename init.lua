@@ -65,8 +65,7 @@ do
     end
 end
 
-if opt.mason_packages and #opt.mason_packages > 0 then
-    require("config.lazy")
+if package.loaded["mason"] ~= nil then
     -- MUST come after config.lazy:
     require("config.lsp").setup(opt.mason_packages or {})
 end
