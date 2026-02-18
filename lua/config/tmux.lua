@@ -1,7 +1,11 @@
 -- Bindings and functionality to make using vim a bit more like
 -- what I'm used to with tmux
 
-vim.keymap.set('t', '<C-A>', '<C-\\><C-N>', { noremap = true })
+-- Prevents accidental default binding (numeric increments):
+-- accidentally-incomplete <C-A> keypresses lead to accidental,
+-- subtle textual modifications
+vim.keymap.set('n', '<C-A>', '', { noremap = true })
+
 vim.keymap.set('t', '<C-A>', '<C-\\><C-N>', { noremap = true })
 vim.keymap.set('t', '<C-A>[', '<C-\\><C-N>', { noremap = true })
 vim.keymap.set({'t','n'}, '<C-A>m', '<C-\\><C-N>:tab Man ',
