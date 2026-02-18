@@ -56,6 +56,43 @@ function M.get_indent(str)
     return i
 end
 
+function M.skip_while(str, pos, fn)
+    local npos = pos
+    while fn(string.sub(str, npos, npos)) do
+        npos = npos + 1
+    end
+    return npos
+end
+
+function M.skip_ws(str, pos)
+    return M.skip_while(str, pos, function(c) return c == ' ' end)
+end
+
+function M.skip_nonws(str, pos)
+    return M.skip_while(str, pos, function(c) return c ~= ' ' end)
+end
+
+-- Returns the month as YYYYMM, given a date entry like:
+--   Wednesday, 2026-02-18
+function M.parse_month(line)
+    local c = 1
+    local month = ""
+    -- First, skip any whitespace
+    c = M.skip_ws(line, c)
+    -- Skip non-whitespace (day-of-week, plus trailing comma)
+    c = M.skip_nonws(line, c)
+    -- Skip whitespace again
+    c = M.skip_ws(line, c)
+    -- Now we're at our year, copy that
+    month = string.sub(line, c, c+3)
+    -- Skip the year, and '-'
+    c = c + 5
+    -- Copy two chars for month
+    month = month .. string.sub(line, c, c+1)
+    -- Done!
+    return month
+end
+
 -- buffer line ops
 
 function M.get_current_lnum(...)

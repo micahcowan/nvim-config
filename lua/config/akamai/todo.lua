@@ -85,8 +85,26 @@ vim.keymap.set({'n','t'}, '<C-A>n', function()
     vim.cmd.wincmd('b')
     vim.api.nvim_feedkeys(":edit ~/TODO/NOTES/", 'n', false)
 end)
--- Go to the right window of the TODO tab, open the current month's journal
--- vim.keymap.set({'
+-- Go to the right window of the TODO tab, open the current
+-- month's journal, and position cursor at buffer end
+vim.keymap.set({'n', 't'}, '<C-A>j', function()
+    open_todo_tab()
+    -- Go to TODAY, and get the date from the first entry found
+    vim.cmd.wincmd('t')
+    util.maybe_edit(0, vim.env.HOME .. "/TODO/JOURNAL/TODAY")
+    vim.cmd.normal('gg')
+    local lnum
+    lnum = vim.fn.search("^\\(Sunday\\|Monday\\|Tuesday\\|Wednesday\\|Thursday\\|Friday\\|Saturday\\),\\? \\+2[0-9]\\{3\\}-[01][0-9]", 'c')
+    lnum = lnum - 1
+    if lnum == -1 then lnum = nil end
+    local line = util.get_line(0, lnum)
+
+    local month = util.parse_month(line)
+    -- Open the month's journal
+    vim.cmd.wincmd('b')
+    util.maybe_edit(0, vim.env.HOME .. "/TODO/JOURNAL/" .. month .. ".txt")
+    vim.cmd.normal('G')
+end)
 
 -- Associate 'mjc-todo' filetype
 vim.api.nvim_create_augroup('mcowan-local', {})
@@ -100,7 +118,7 @@ vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
         vim.api.nvim_set_option_value('path', vim.env.HOME .. "/TODO/NOTES", {buf=b})
 
         -- Convenient aliases for <C-A>{t,r,n}
-        for _, key in ipairs({'t','r','n'}) do
+        for _, key in ipairs({'t','r','n', 'j'}) do
             vim.keymap.set('n', "g" .. key, "<C-A>" .. key, {
                 nowait = true,
                 buffer = b,
