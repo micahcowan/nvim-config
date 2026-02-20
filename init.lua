@@ -33,6 +33,7 @@ end
 
 vim.o.tabclose = 'uselast'
 vim.o.showtabline = 2   -- always show
+vim.o.scrollback = 100000 -- maximum terminal scrollback
 
 -- Tell netrw to display relative line numbers
 vim.g.netrw_bufsettings = "noma nomod nonu nobl nowrap ro rnu"
