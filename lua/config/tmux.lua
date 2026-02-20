@@ -174,6 +174,25 @@ vim.api.nvim_create_autocmd('TermOpen', {
     group = 'mjc-tmux-auto',
 })
 
+-- Set relative numbering locally in terminal when in "normal" mode,
+-- (to facilitate movement), then deactivate again on insert.
+vim.api.nvim_create_autocmd('ModeChanged', {
+    group = 'mjc-tmux-auto',
+    pattern = 't:nt',
+    callback = function()
+        vim.api.nvim_set_option_value('relativenumber', true,
+                                      { win = 0, })
+    end,
+})
+vim.api.nvim_create_autocmd('ModeChanged', {
+    group = 'mjc-tmux-auto',
+    pattern = 'nt:t',
+    callback = function()
+        vim.api.nvim_set_option_value('relativenumber', false,
+                                      { win = 0, })
+    end,
+})
+
 -- netrw: Open file at left, terminal in cwd at right - but stay left!
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'netrw',
