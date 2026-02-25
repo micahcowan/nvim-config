@@ -1,6 +1,9 @@
 return {
     "nanozuki/tabby.nvim",
     opts = {
+        -- See the following URL for tabby presets:
+        -- github.com/nanozuki/tabby.nvim/blob/main/lua/tabby/init.lua
+        preset = "tab_only",
         option = {
             tab_name = {
                 name_fallback = function(tab_nr)
