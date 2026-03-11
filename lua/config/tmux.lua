@@ -94,12 +94,25 @@ for _, k in ipairs({'C', 'c'}) do
             end
             -- :tab new | tcd %:p:h | terminal
             --   except that %:p:h comes from current buffer, not empty one.
-            vim.cmd.new({ mods = { tab = vim.api.nvim_get_current_tabpage() } })
+
+            -- Set tab to the pre-existing one
+            local tab = vim.api.nvim_get_current_tabpage()
+            vim.cmd.new({ mods = { tab = tab } })
+            -- Now set tab to newly-created one
+            tab = vim.api.nvim_get_current_tabpage()
             if dir ~= nil then
                 vim.cmd.tcd(dir)
             end
             vim.cmd.terminal()
             vim.cmd.startinsert()
+            local _, tabname = pcall(function()
+                return require'tabby.feature.tab_name' end)
+            if tabname ~= nil then
+                vim.ui.input({ prompt = "New TAB name: " }, function(name)
+                    if name == nil then return end
+                    tabname.set(tab, name)
+                end)
+            end
         end,
         desc = "Create a new terminal tab. :tcd from current file.",
     })
