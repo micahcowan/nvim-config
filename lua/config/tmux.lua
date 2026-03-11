@@ -66,17 +66,17 @@ vim.keymap.set({'n','t'}, '<C-A><Tab>', '', {
 })
 
 local split_new = function()
-    vim.cmd(':vertical split')
-    vim.cmd.wincmd('w')
+    vim.cmd(':vertical new')
+    vim.cmd.wincmd('L')
     vim.cmd.terminal()
     vim.cmd.startinsert()
 end
-vim.keymap.set('n', '<C-A>s', '', {
+vim.keymap.set({'n', 't'}, '<C-A>s', '', {
     callback = split_new,
     desc =
         "Split (vertical) and place a new terminal session at the right",
 })
-vim.keymap.set('n', '<C-A>S', '', {
+vim.keymap.set({'n', 't'}, '<C-A>S', '', {
     callback = function()
         vim.cmd.tcd('%:p:h')
         split_new()
