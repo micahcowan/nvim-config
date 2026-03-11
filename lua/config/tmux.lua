@@ -20,8 +20,6 @@ vim.keymap.set({'n','t'}, '<C-A><C-A>', '<C-\\><C-N>g<Tab>',
 vim.keymap.set({'n','t'}, '<C-A>e', '<C-\\><C-N>:tab new\n:edit ',
     { noremap = true })
 vim.keymap.set('t', '<C-A>]', '<C-\\><C-O>p', { noremap = true })
-vim.keymap.set({'n','t'}, '<C-A>c', '<C-\\><C-N>:tab new<CR>:edit .<CR>',
-    { noremap = true })
 
 -- Send raw C-a, if C-a a is typed
 vim.keymap.set('t', '<C-A>a', '', {
@@ -86,23 +84,26 @@ vim.keymap.set('n', '<C-A>S', '', {
     desc =
         "Like <C-A>s, but first set :tcd from current file's containing dir",
 })
-vim.keymap.set({'n','t'}, '<C-A>C', '', {
-    callback = function()
-        local dir = vim.fn.expand("%:p:h")
-        if vim.o.buftype == 'terminal' then
-            dir = nil
-        end
-        -- :tab new | tcd %:p:h | terminal
-        --   except that %:p:h comes from current buffer, not empty one.
-        vim.cmd.new({ mods = { tab = vim.api.nvim_get_current_tabpage() } })
-        if dir ~= nil then
-            vim.cmd.tcd(dir)
-        end
-        vim.cmd.terminal()
-        vim.cmd.startinsert()
-    end,
-    desc = "Create a new terminal tab. :tcd from current file.",
-})
+
+for _, k in ipairs({'C', 'c'}) do
+    vim.keymap.set({'n','t'}, "<C-A>" .. k, '', {
+        callback = function()
+            local dir = vim.fn.expand("%:p:h")
+            if vim.o.buftype == 'terminal' then
+                dir = nil
+            end
+            -- :tab new | tcd %:p:h | terminal
+            --   except that %:p:h comes from current buffer, not empty one.
+            vim.cmd.new({ mods = { tab = vim.api.nvim_get_current_tabpage() } })
+            if dir ~= nil then
+                vim.cmd.tcd(dir)
+            end
+            vim.cmd.terminal()
+            vim.cmd.startinsert()
+        end,
+        desc = "Create a new terminal tab. :tcd from current file.",
+    })
+end
 
 vim.keymap.set('n', '<C-W>o', '', {
     desc = [[Close all but current window, unless there's a terminal]],
