@@ -4,7 +4,7 @@
 -- Prevents accidental default binding (numeric increments):
 -- accidentally-incomplete <C-A> keypresses lead to accidental,
 -- subtle textual modifications
-vim.keymap.set('n', '<C-A>', '', { noremap = true })
+vim.keymap.set({'n', 'i'}, '<C-A>', '', { noremap = true })
 
 vim.keymap.set('t', '<C-A>', '<C-\\><C-N>', { noremap = true })
 vim.keymap.set('t', '<C-A>[', '<C-\\><C-N>', { noremap = true })
@@ -15,7 +15,7 @@ vim.keymap.set('t', '<C-kPageDown>', '<C-\\><C-N><C-kPageDown>',
 vim.keymap.set('t', '<C-kPageUp>', '<C-\\><C-N><C-kPageUp>',
     { noremap = true })
 vim.keymap.set('n', '<C-a>|', '<C-w>v<C-w>w', { noremap = true })
-vim.keymap.set({'n','t'}, '<C-A><C-A>', '<C-\\><C-N>g<Tab>',
+vim.keymap.set({'n','t','i'}, '<C-A><C-A>', '<C-\\><C-N>g<Tab>',
     { noremap = true })
 vim.keymap.set({'n','t'}, '<C-A>e', '<C-\\><C-N>:tab new\n:edit ',
     { noremap = true })
@@ -57,7 +57,7 @@ vim.keymap.set({'n','t'}, '<C-A>A', '', {
     desc = [[Prompt to rename the current tab]],
 })
 
-vim.keymap.set({'n','t'}, '<C-A><Tab>', '', {
+vim.keymap.set({'n','t','i'}, '<C-A><Tab>', '', {
     noremap = true,
     callback = function()
         vim.cmd.wincmd('w')
