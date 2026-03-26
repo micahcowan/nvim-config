@@ -218,14 +218,28 @@ vim.api.nvim_create_autocmd('FileType', {
             buffer = b,
         })
 
+        -- Move by headings
+        vim.keymap.set('', ']]', '', {
+            callback = function()
+                vim.fn.search("^[^ ]", 'W')
+            end,
+            buffer = b,
+        })
+        vim.keymap.set('', '[[', '', {
+            callback = function()
+                vim.fn.search("^[^ ]", 'bW')
+            end,
+            buffer = b,
+        })
+
         -- Move by (root) items: J/K
-        vim.keymap.set('n', 'J', '', {
+        vim.keymap.set('', 'J', '', {
             callback = function()
                 vim.fn.search("^  [-./x|+]", 'W')
             end,
             buffer = b,
         })
-        vim.keymap.set('n', 'K', '', {
+        vim.keymap.set('', 'K', '', {
             callback = function()
                 vim.fn.search("^  [-./x|+]", 'bW')
             end,
@@ -234,13 +248,13 @@ vim.api.nvim_create_autocmd('FileType', {
 
         -- Move by (any) items: Ctrl-J/K
         --   (Ctrl-J is newline/probably translated to <CR>. But that's fine.)
-        vim.keymap.set('n', '<C-J>', '', {
+        vim.keymap.set('', '<C-J>', '', {
             callback = function()
                 vim.fn.search("^  \\+[-./x|+]", 'W')
             end,
             buffer = b,
         })
-        vim.keymap.set('n', '<C-K>', '', {
+        vim.keymap.set('', '<C-K>', '', {
             callback = function()
                 vim.fn.search("^  \\+[-./x|+]", 'bW')
             end,
