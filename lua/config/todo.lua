@@ -233,13 +233,14 @@ vim.api.nvim_create_autocmd('FileType', {
         })
 
         -- Move by (root) items: J/K
-        vim.keymap.set('', 'J', '', {
+        vim.keymap.set('', '<M-j>', '', {
             callback = function()
                 vim.fn.search("^  [-./x|+]", 'W')
             end,
+
             buffer = b,
         })
-        vim.keymap.set('', 'K', '', {
+        vim.keymap.set('', '<M-k>', '', {
             callback = function()
                 vim.fn.search("^  [-./x|+]", 'bW')
             end,
