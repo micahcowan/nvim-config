@@ -20,6 +20,8 @@ vim.keymap.set({'n','t','i'}, '<C-A><C-A>', '<C-\\><C-N>g<Tab>',
 vim.keymap.set({'n','t'}, '<C-A>e', '<C-\\><C-N>:tab new\n:edit ',
     { noremap = true })
 vim.keymap.set('t', '<C-A>]', '<C-\\><C-O>p', { noremap = true })
+vim.keymap.set({'n','t'}, '<C-A>\'', '<C-\\><C-N>:tabnext ',
+    { noremap = true })
 
 -- Send raw C-a, if C-a a is typed
 vim.keymap.set('t', '<C-A>a', '', {
