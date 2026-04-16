@@ -68,23 +68,40 @@ vim.keymap.set({'n','t','i'}, '<C-A><Tab>', '', {
 })
 
 local split_new = function()
+    local dir = vim.fn.expand("%:p:h") -- get dir from current window
+    -- special logic for when current tab is a terminal
+    if vim.o.buftype == 'terminal' then
+        -- extract pid from buffer name
+        -- e.g. lua= vim.fn.bufname()
+        local name = vim.fn.bufname()
+        local pid = vim.fn.matchstr(name, "//[0-9]\\+:")
+        if pid ~= "" then
+            local start = 3 -- skipping initial "//"
+            local final = start + #pid - #"//" - #":" - 1
+            pid = string.sub(pid, start, final)
+            vim.print("pid is " .. pid)
+            dir = vim.fn.resolve("/proc/" .. pid .. "/cwd")
+            vim.print("dir is " .. dir)
+        end
+    end
     vim.cmd(':vertical new')
     vim.cmd.wincmd('L')
-    vim.cmd.terminal()
-    vim.cmd.startinsert()
+    vim.cmd.tcd(dir)
 end
 vim.keymap.set({'n', 't'}, '<C-A>s', '', {
     callback = split_new,
     desc =
-        "Split (vertical) and place a new terminal session at the right",
+        "Split (vertical) and place a new empty window at the right",
 })
-vim.keymap.set({'n', 't'}, '<C-A>S', '', {
+vim.keymap.set({'n', 't', 'i'}, '<C-A>S', '', {
     callback = function()
-        vim.cmd.tcd('%:p:h')
         split_new()
+        vim.cmd.terminal()
+        vim.cmd.startinsert()
     end,
     desc =
-        "Like <C-A>s, but first set :tcd from current file's containing dir",
+        "Split (vertical) and place a new terminal window at the right",
+    remap = true,
 })
 
 for _, k in ipairs({'C', 'c'}) do
