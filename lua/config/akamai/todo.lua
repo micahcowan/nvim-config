@@ -85,6 +85,8 @@ vim.keymap.set({'n','t'}, '<C-A>n', function()
     vim.cmd.wincmd('b')
     vim.api.nvim_feedkeys(":edit ~/TODO/NOTES/", 'n', false)
 end)
+
+local todo_date_re = "^\\(Sunday\\|Monday\\|Tuesday\\|Wednesday\\|Thursday\\|Friday\\|Saturday\\),\\? \\+2[0-9]\\{3\\}-[01][0-9]"
 -- Go to the right window of the TODO tab, open the current
 -- month's journal, and position cursor at buffer end
 vim.keymap.set({'n', 't'}, '<C-A>j', function()
@@ -92,18 +94,75 @@ vim.keymap.set({'n', 't'}, '<C-A>j', function()
     -- Go to TODAY, and get the date from the first entry found
     vim.cmd.wincmd('t')
     util.maybe_edit(0, vim.env.HOME .. "/TODO/JOURNAL/TODAY")
-    vim.cmd.normal('gg')
+    vim.fn.cursor(1,1)
     local lnum
-    lnum = vim.fn.search("^\\(Sunday\\|Monday\\|Tuesday\\|Wednesday\\|Thursday\\|Friday\\|Saturday\\),\\? \\+2[0-9]\\{3\\}-[01][0-9]", 'c')
-    lnum = lnum - 1
-    if lnum == -1 then lnum = nil end
+    lnum = vim.fn.search(todo_date_re, 'cW')
+    lnum = lnum - 1 -- 0-based (API) indexing
+    if lnum == -1 then
+        vim.notify("No date entry found in TODAY!", vim.log.levels.WARN)
+        return
+    end
     local line = util.get_line(0, lnum)
 
     local month = util.parse_month(line)
+    lnum = lnum + 1 -- convert back to 1-based (vim) line indexing
+
+    -- Now find the *next* occurrance of a date, or a lone period on its
+    -- own, or the end of the file
+    local nxlnum = vim.fn.search(todo_date_re, 'W')
+    if nxlnum == 0 or nxlnum == lnum then
+        -- didn't find a following date
+        -- search for "." alone on a line
+        nxlnum = vim.fn.search("^.$", 'W')
+    end
+    if nxlnum == 0 then
+        -- STILL didn't find. Just use end of file
+        nxlnum = vim.fn.getpos('$')[2] + 1
+    end
+    if nxlnum <= lnum then
+        vim.notify("Move to journal: nothing to move!",
+                   vim.log.levels.WARN)
+        vim.notify("(start is " .. lnum .. ", end is " .. nxlnum .. ")",
+                   vim.log.levels.WARN)
+        return
+    end
+
+    -- Delete the journal entry
+    vim.fn.cursor(lnum, 1) -- move cursor to date entry start
+    vim.cmd.normal{tostring(nxlnum - lnum) .. 'dd', bang = true} -- perform delete!
+
     -- Open the month's journal
     vim.cmd.wincmd('b')
     util.maybe_edit(0, vim.env.HOME .. "/TODO/JOURNAL/" .. month .. ".txt")
-    vim.cmd.normal('G')
+    vim.cmd.normal{'G', bang = true}
+
+    -- Ensure the last line is blank, before pasting
+    local s = util.get_current_line()
+    if s ~= "" then
+        -- not blank, add a new empty line
+        local last = vim.fn.getpos('$')[2]
+        vim.fn.setline(last+1, "")
+    end
+    -- Paste the deleted journal entry (from "TODAY")
+    vim.cmd.normal{'pG', bang = true}
+
+    -- Return to TODAY, delete any . at the top, and start a new date
+    -- entry if there are none
+    vim.cmd.wincmd('t')
+    s = util.get_current_line()
+    if s == "." then
+        vim.cmd.normal{'dd', bang = true}
+    end
+
+    local found = vim.fn.search(todo_date_re, 'c')
+    if found == 0 then
+        -- Create day entry!
+        local keys = vim.api.nvim_replace_termcodes('<C-T>d',
+            true, false, true)
+        vim.fn.feedkeys(keys)
+    end
+
+    -- done!
 end)
 
 -- Associate 'mjc-todo' filetype
