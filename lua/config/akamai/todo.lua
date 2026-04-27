@@ -89,7 +89,7 @@ end)
 local todo_date_re = "^\\(Sunday\\|Monday\\|Tuesday\\|Wednesday\\|Thursday\\|Friday\\|Saturday\\),\\? \\+2[0-9]\\{3\\}-[01][0-9]"
 -- Go to the right window of the TODO tab, open the current
 -- month's journal, and position cursor at buffer end
-vim.keymap.set({'n', 't'}, '<C-A>j', function()
+local journal_entry = function(move_entry)
     open_todo_tab()
     -- Go to TODAY, and get the date from the first entry found
     vim.cmd.wincmd('t')
@@ -127,43 +127,50 @@ vim.keymap.set({'n', 't'}, '<C-A>j', function()
         return
     end
 
-    -- Delete the journal entry
-    vim.fn.cursor(lnum, 1) -- move cursor to date entry start
-    vim.cmd.normal{tostring(nxlnum - lnum) .. 'dd', bang = true} -- perform delete!
+    if (move_entry) then
+        -- Delete the journal entry
+        vim.fn.cursor(lnum, 1) -- move cursor to date entry start
+        vim.cmd.normal{tostring(nxlnum - lnum) .. 'dd', bang = true} -- perform delete!
+    end
 
     -- Open the month's journal
     vim.cmd.wincmd('b')
     util.maybe_edit(0, vim.env.HOME .. "/TODO/JOURNAL/" .. month .. ".txt")
     vim.cmd.normal{'G', bang = true}
 
-    -- Ensure the last line is blank, before pasting
-    local s = util.get_current_line()
-    if s ~= "" then
-        -- not blank, add a new empty line
-        local last = vim.fn.getpos('$')[2]
-        vim.fn.setline(last+1, "")
-    end
-    -- Paste the deleted journal entry (from "TODAY")
-    vim.cmd.normal{'pG', bang = true}
+    if (move_entry) then
+        -- Ensure the last line is blank, before pasting
+        local s = util.get_current_line()
+        if s ~= "" then
+            -- not blank, add a new empty line
+            local last = vim.fn.getpos('$')[2]
+            vim.fn.setline(last+1, "")
+        end
+        -- Paste the deleted journal entry (from "TODAY")
+        vim.cmd.normal{'pG', bang = true}
 
-    -- Return to TODAY, delete any . at the top, and start a new date
-    -- entry if there are none
-    vim.cmd.wincmd('t')
-    s = util.get_current_line()
-    if s == "." then
-        vim.cmd.normal{'dd', bang = true}
-    end
+        -- Return to TODAY, delete any . at the top, and start a new date
+        -- entry if there are none
+        vim.cmd.wincmd('t')
+        s = util.get_current_line()
+        if s == "." then
+            vim.cmd.normal{'dd', bang = true}
+        end
 
-    local found = vim.fn.search(todo_date_re, 'c')
-    if found == 0 then
-        -- Create day entry!
-        local keys = vim.api.nvim_replace_termcodes('<C-T>d',
-            true, false, true)
-        vim.fn.feedkeys(keys)
+        local found = vim.fn.search(todo_date_re, 'c')
+        if found == 0 then
+            -- Create day entry!
+            local keys = vim.api.nvim_replace_termcodes('<C-T>d',
+                true, false, true)
+            vim.fn.feedkeys(keys)
+        end
     end
 
     -- done!
-end)
+end
+vim.keymap.set({'n', 't'}, '<C-A>j', function() journal_entry(true) end)
+vim.keymap.set({'n', 't'}, '<C-A>J', function() journal_entry(false) end)
+
 
 -- Associate 'mjc-todo' filetype
 vim.api.nvim_create_augroup('mcowan-local', {})
