@@ -200,6 +200,15 @@ vim.api.nvim_create_autocmd('TermOpen', {
             buffer = true,
             noremap = true,
         })
+        vim.keymap.set('n', 'J', '', {
+            noremap = true,
+            callback = function()
+                vim.api.nvim_set_option_value('relativenumber', true,
+                { win = 0, })
+            end,
+            desc = [[Activate relative numbering in the terminal]],
+            buffer = true,
+        })
         vim.api.nvim_set_option_value('winfixbuf', true, {
             win = vim.api.nvim_get_current_win()
         })
@@ -209,14 +218,16 @@ vim.api.nvim_create_autocmd('TermOpen', {
 
 -- Set relative numbering locally in terminal when in "normal" mode,
 -- (to facilitate movement), then deactivate again on insert.
-vim.api.nvim_create_autocmd('ModeChanged', {
-    group = 'mjc-tmux-auto',
-    pattern = 't:nt',
-    callback = function()
-        vim.api.nvim_set_option_value('relativenumber', true,
-                                      { win = 0, })
-    end,
-})
+if false then
+    vim.api.nvim_create_autocmd('ModeChanged', {
+        group = 'mjc-tmux-auto',
+        pattern = 't:nt',
+        callback = function()
+            vim.api.nvim_set_option_value('relativenumber', true,
+                                          { win = 0, })
+        end,
+    })
+end
 vim.api.nvim_create_autocmd('ModeChanged', {
     group = 'mjc-tmux-auto',
     pattern = 'nt:t',
