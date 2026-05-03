@@ -204,7 +204,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
             noremap = true,
             callback = function()
                 vim.api.nvim_set_option_value('relativenumber', true,
-                { win = 0, })
+                { scope = 'local', win = 0, })
             end,
             desc = [[Activate relative numbering in the terminal]],
             buffer = true,
@@ -224,7 +224,7 @@ if false then
         pattern = 't:nt',
         callback = function()
             vim.api.nvim_set_option_value('relativenumber', true,
-                                          { win = 0, })
+                                          { scope = 'local', win = 0, })
         end,
     })
 end
@@ -233,7 +233,7 @@ vim.api.nvim_create_autocmd('ModeChanged', {
     pattern = 'nt:t',
     callback = function()
         vim.api.nvim_set_option_value('relativenumber', false,
-                                      { win = 0, })
+                                      { scope = 'local', win = 0, })
     end,
 })
 
